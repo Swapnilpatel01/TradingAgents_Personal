@@ -1,5 +1,26 @@
 # Studio in a terminal
 
+## Original-style Windows launcher
+
+Double-click `Start TradingAgents.cmd` at the repository root. It opens an
+arrow-key workspace menu in the same terminal interface as the original CLI.
+Choose **Run analysis — original setup and live agent display** for the original
+workflow. Other entries expose saved setups, custom reviewers, scanner, historical
+backtests, portfolio snapshots and research history using arrow-key selections
+and guided input forms. You return to the workspace menu after each action.
+
+**Run a saved setup** uses the original streaming live-agent display and then
+adds custom reviewer reports to the saved result. Create a setup first using the
+workspace menu. Custom reviewers remain supplemental to the upstream rating.
+No separate website is involved. The original bare `tradingagents` command and
+all scriptable `tradingagents studio` commands remain available.
+
+You can also open this interface with `tradingagents workspace`. The launcher
+uses the checkout beside it and requires its `.venv`. Passing arguments to the
+launcher forwards them to the original CLI, for example `"Start TradingAgents.cmd" --help`.
+
+## Scriptable terminal commands
+
 Studio works directly in PowerShell, Command Prompt, Windows Terminal, or a Unix
 shell. No browser, web server, Studio access key, FastAPI or uvicorn is required.
 The original `tradingagents` interactive workflow remains available unchanged.

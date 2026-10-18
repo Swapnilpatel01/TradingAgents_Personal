@@ -61,15 +61,18 @@ def value_portfolio(portfolio):
             "equity": total if complete else None, "unrealized_pnl": pnl if complete else None}
 
 
-def analyze(request, setup, custom, portfolio, root):
+def analyze(request, setup, custom, portfolio, root, runner=None):
     from tradingagents.graph.trading_graph import TradingAgentsGraph
     from tradingagents.llm_clients import create_tier_client
     from tradingagents.portfolio import PortfolioContext
 
     config = studio_config(setup, root)
     context = PortfolioContext.model_validate(portfolio) if portfolio else None
-    graph = TradingAgentsGraph(selected_analysts=setup["analysts"], config=config)
-    state, rating = graph.propagate(request.ticker.upper(), request.as_of.isoformat(), portfolio=context)
+    if runner is None:
+        graph = TradingAgentsGraph(selected_analysts=setup["analysts"], config=config)
+        state, rating = graph.propagate(request.ticker.upper(), request.as_of.isoformat(), portfolio=context)
+    else:
+        state, rating = runner(request, setup, context, config)
     reports = {key: value for key, value in state.items()
                if isinstance(value, str) and (key.endswith("report") or key.endswith("decision"))}
     supplements = []

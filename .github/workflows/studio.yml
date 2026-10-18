@@ -11,3 +11,26 @@ jobs:
       - run: pip install -e '.[studio,dev]' httpx
       - run: ruff check tradingagents/studio tests/test_studio.py
       - run: python -m pytest
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -e '.[studio]'
+      - run: npm install --no-save playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Verify browser flows with deterministic providers
+        run: |
+          python tests/studio_browser_server.py > /tmp/studio-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8766/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node tests/studio_browser.cjs

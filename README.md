@@ -29,6 +29,12 @@
 
 # TradingAgents: Multi-Agents LLM Financial Trading Framework
 
+## Personal Studio (this fork)
+
+Optional dashboard, custom analyst reviews, saved setups, scanner, historical
+evaluation, iPhone PWA and portfolio tracking. Uses the existing ChatGPT
+subscription provider; no live trades. See [Studio setup and scope](docs/STUDIO.md).
+
 ## News
 
 <!-- news:start -->

@@ -2,6 +2,7 @@
 
 import hmac
 import logging
+import mimetypes
 import os
 import secrets
 import threading
@@ -188,6 +189,9 @@ def create_app(data_dir=None, token=None):
 
     static = Path(__file__).parent / "static"
     if static.exists():
+        # Windows registry associations can otherwise label JavaScript text/plain.
+        mimetypes.add_type("text/javascript", ".js")
+        mimetypes.add_type("application/manifest+json", ".webmanifest")
         app.mount("/", StaticFiles(directory=static, html=True), name="studio")
     return app
 

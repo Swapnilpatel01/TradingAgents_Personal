@@ -96,11 +96,11 @@ def _build_run_config(selections: dict, checkpoint: bool | None) -> dict:
     return config
 
 
-def run_analysis(checkpoint: bool | None = None, portfolio=None, flags=None):
+def run_analysis(checkpoint: bool | None = None, portfolio=None, flags=None, prepared=None):
     flags = flags or {}
     # With no terminal nothing can answer a prompt: name every question still
     # open before any model is called, rather than stopping at the first one.
-    if not (sys.stdin and sys.stdin.isatty()):
+    if prepared is None and not (sys.stdin and sys.stdin.isatty()):
         gaps = unattended_gaps(flags)
         if gaps:
             console.print("[red]No terminal to answer the setup questions. Set:[/red]")
@@ -108,9 +108,9 @@ def run_analysis(checkpoint: bool | None = None, portfolio=None, flags=None):
                 console.print(f"  {gap}")
             raise typer.Exit(code=1)
 
-    selections = get_user_selections(flags)
+    selections = prepared["selections"] if prepared is not None else get_user_selections(flags)
 
-    config = _build_run_config(selections, checkpoint)
+    config = prepared["config"] if prepared is not None else _build_run_config(selections, checkpoint)
 
     stats_handler = StatsCallbackHandler()
 
@@ -387,6 +387,7 @@ def run_analysis(checkpoint: bool | None = None, portfolio=None, flags=None):
 
     _offer_reports(final_state, graph, selections["ticker"],
                    save=flags.get("save"), show=flags.get("show"), html=flags.get("html"))
+    return final_state, run_rating(final_state)
 
 
 def _yes(question: str) -> bool:

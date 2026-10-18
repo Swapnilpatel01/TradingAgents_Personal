@@ -3,6 +3,9 @@
 An optional personal research interface for this fork. No broker credentials,
 order endpoints or live trading are implemented. Core CLI behavior is unchanged.
 
+Prefer a terminal? Run `tradingagents studio` for the action menu, or see
+[terminal commands](STUDIO_TERMINAL.md). No web server or Studio extras are needed.
+
 ## Install and start
 
 Use Python 3.11 or newer (3.12 recommended):
